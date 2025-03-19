@@ -13,6 +13,7 @@ class SpellChecker:
 
         words = txtIn.split()
         paroleErrate = " - "
+        print(f"{txtIn}, {language}, {modality}")
 
         match modality:
             case "Default":
@@ -43,6 +44,10 @@ class SpellChecker:
                 return paroleErrate, t2 - t1
             case _:
                 return None
+
+
+    def handleSpellCheck(self, e):
+        self.handleSentence(self._view._txtIn.value, self._view._ddLanguage.value, self._view._ddModality.value)
 
 
     def printMenu(self):

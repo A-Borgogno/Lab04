@@ -3,6 +3,12 @@ import flet as ft
 class View(object):
     def __init__(self, page: ft.Page):
         # Page
+        self._txtIn = None
+        self._lv = None
+        self._btn1 = None
+        self._ddModality = None
+        self._ddLanguage = None
+        self.language = None
         self.page = page
         self.page.title = "TdP 2024 - Lab 04 - SpellChecker ++"
         self.page.horizontal_alignment = 'CENTER'
@@ -27,10 +33,29 @@ class View(object):
         )
 
         # Add your stuff here
+        self._ddLanguage = ft.Dropdown(label="Select a language", width=self.page.width,
+                         options=[ft.dropdown.Option("Italian"),
+                                  ft.dropdown.Option("English"),
+                                  ft.dropdown.Option("Spanish")])
+        row1 = ft.Row(controls=[self._ddLanguage])
 
-        self.page.add([])
+        self._ddModality = ft.Dropdown(label="Modality search",
+                          options=[ft.dropdown.Option("Default"),
+                                   ft.dropdown.Option("Linear"),
+                                   ft.dropdown.Option("Dichotomic")])
+        self._txtIn = ft.TextField(label="Add your sentence here")
+        self._btn1 = ft.ElevatedButton("Spell Check", on_click=self.__controller.handleSpellCheck)
+        row2 = ft.Row(controls=[self._ddModality, self._txtIn, self._btn1])
+
+        self._lv = ft.ListView(expand=1, spacing=10, auto_scroll=True)
+        row3 = ft.Row(controls=[self._lv])
+
+        self.page.add(row1)
+        self.page.add(row2)
+        self.page.add(row3)
 
         self.page.update()
+
 
     def update(self):
         self.page.update()
