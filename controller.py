@@ -11,9 +11,8 @@ class SpellChecker:
     def handleSentence(self, txtIn, language, modality):
         txtIn = replaceChars(txtIn.lower())
 
-        words = txtIn.split()
+        words = txtIn.split(" ")
         paroleErrate = " - "
-        print(f"{txtIn}, {language}, {modality}")
 
         match modality:
             case "Default":
@@ -46,9 +45,37 @@ class SpellChecker:
                 return None
 
 
-    def handleSpellCheck(self, e):
-        self.handleSentence(self._view._txtIn.value, self._view._ddLanguage.value, self._view._ddModality.value)
+    def handleLanguageChange(self, e):
+        self._view._txtLanguage.value = f"Lingua {self._view._ddLanguage.value} selezionata correttamente"
+        self._view._txtLanguage.color = "green"
+        self._view.page.update()
 
+    def handleModalityChange(self, e):
+        self._view._txtModality.value = f"Modalità {self._view._ddModality.value} selezionata correttamente"
+        self._view._txtModality.color = "green"
+        self._view.page.update()
+
+    def handleSpellCheck(self, e):
+        if not self.checkErrors():
+            self._view._lv.controls.append(ft.Text(f"Errore! Uno o più campi non sono stati inseriti correttamente", color="red", size=20))
+            self._view.page.update()
+        else:
+            self._view._lv.controls.clear()
+            self._view.page.update()
+            errate = self.handleSentence(self._view._txtIn.value, self._view._ddLanguage.value, self._view._ddModality.value)
+            self._view._lv.controls.append(ft.Text(f"Frase da ricercare: {self._view._txtIn.value}", size=18))
+            self._view._lv.controls.append(ft.Text(f"Parole errate: {errate[0]}", size=18))
+            self._view._lv.controls.append(ft.Text(f"Tempo di esecuzione: {errate[1]}", size=18))
+            self._view.page.update()
+
+    def checkErrors(self):
+        if self._view._ddLanguage.value == "Language not selected":
+            return False
+        elif self._view._ddModality == "Modality not selected":
+            return False
+        elif self._view._txtIn.value == "":
+            return False
+        return True
 
     def printMenu(self):
         print("______________________________\n" +

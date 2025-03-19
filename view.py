@@ -3,6 +3,8 @@ import flet as ft
 class View(object):
     def __init__(self, page: ft.Page):
         # Page
+        self._txtModality = None
+        self._txtLanguage = None
         self._txtIn = None
         self._lv = None
         self._btn1 = None
@@ -33,21 +35,23 @@ class View(object):
         )
 
         # Add your stuff here
-        self._ddLanguage = ft.Dropdown(label="Select a language", width=self.page.width,
+        self._ddLanguage = ft.Dropdown(label="Select a language", width=self.page.width-400,
                          options=[ft.dropdown.Option("Italian"),
                                   ft.dropdown.Option("English"),
-                                  ft.dropdown.Option("Spanish")])
-        row1 = ft.Row(controls=[self._ddLanguage])
+                                  ft.dropdown.Option("Spanish")], on_change=self.__controller.handleLanguageChange)
+        self._txtLanguage = ft.Text("Language not selected", size=18)
+        row1 = ft.Row(controls=[self._ddLanguage, self._txtLanguage])
 
         self._ddModality = ft.Dropdown(label="Modality search",
                           options=[ft.dropdown.Option("Default"),
                                    ft.dropdown.Option("Linear"),
-                                   ft.dropdown.Option("Dichotomic")])
+                                   ft.dropdown.Option("Dichotomic")], on_change=self.__controller.handleModalityChange)
         self._txtIn = ft.TextField(label="Add your sentence here")
         self._btn1 = ft.ElevatedButton("Spell Check", on_click=self.__controller.handleSpellCheck)
-        row2 = ft.Row(controls=[self._ddModality, self._txtIn, self._btn1])
+        self._txtModality = ft.Text("Modality not selected", size=18)
+        row2 = ft.Row(controls=[self._ddModality, self._txtIn, self._btn1, self._txtModality])
 
-        self._lv = ft.ListView(expand=1, spacing=10, auto_scroll=True)
+        self._lv = ft.ListView(expand=1, spacing=10, auto_scroll=True, controls=[])
         row3 = ft.Row(controls=[self._lv])
 
         self.page.add(row1)
