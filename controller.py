@@ -11,13 +11,13 @@ class SpellChecker:
     def handleSentence(self, txtIn, language, modality):
         txtIn = replaceChars(txtIn.lower())
 
-        words = txtIn.split(" ")
+        words = txtIn.split()
         paroleErrate = " - "
 
         match modality:
             case "Default":
                 t1 = time.time()
-                parole = self._multiDic.searchWord(words, language)
+                parole = self._multiDic.searchWord(words, language.lower())
                 for parola in parole:
                     if not parola.corretta:
                         paroleErrate = paroleErrate + str(parola) + " - "
@@ -26,16 +26,16 @@ class SpellChecker:
 
             case "Linear":
                 t1 = time.time()
-                parole = self._multiDic.searchWordLinear(words, language)
+                parole = self._multiDic.searchWordLinear(words, language.lower())
                 for parola in parole:
                     if not parola.corretta:
-                        paroleErrate = paroleErrate + str(parola) + " "
+                        paroleErrate = paroleErrate + str(parola) + " - "
                 t2 = time.time()
                 return paroleErrate, t2 - t1
 
             case "Dichotomic":
                 t1 = time.time()
-                parole = self._multiDic.searchWordDichotomic(words, language)
+                parole = self._multiDic.searchWordDichotomic(words, language.lower())
                 for parola in parole:
                     if not parola.corretta:
                         paroleErrate = paroleErrate + str(parola) + " - "
@@ -46,32 +46,33 @@ class SpellChecker:
 
 
     def handleLanguageChange(self, e):
-        self._view._txtLanguage.value = f"Lingua {self._view._ddLanguage.value} selezionata correttamente"
+        self._view._txtLanguage.value = f"Language {self._view._ddLanguage.value} selected corretly"
         self._view._txtLanguage.color = "green"
-        self._view.page.update()
+        self._view.update()
 
     def handleModalityChange(self, e):
-        self._view._txtModality.value = f"Modalità {self._view._ddModality.value} selezionata correttamente"
+        self._view._txtModality.value = f"Modality {self._view._ddModality.value} selected corretly"
         self._view._txtModality.color = "green"
-        self._view.page.update()
+        self._view.update()
 
     def handleSpellCheck(self, e):
         if not self.checkErrors():
             self._view._lv.controls.append(ft.Text(f"Errore! Uno o più campi non sono stati inseriti correttamente", color="red", size=20))
-            self._view.page.update()
+            self._view.update()
         else:
             self._view._lv.controls.clear()
-            self._view.page.update()
+            self._view.update()
             errate = self.handleSentence(self._view._txtIn.value, self._view._ddLanguage.value, self._view._ddModality.value)
-            self._view._lv.controls.append(ft.Text(f"Frase da ricercare: {self._view._txtIn.value}", size=18))
+            row = ft.Row(controls=[ft.Text(f"Frase da ricercare: ", size=18), ft.Text(self._view._txtIn.value, italic=True, size=18)])
+            self._view._lv.controls.append(row)
             self._view._lv.controls.append(ft.Text(f"Parole errate: {errate[0]}", size=18))
             self._view._lv.controls.append(ft.Text(f"Tempo di esecuzione: {errate[1]}", size=18))
-            self._view.page.update()
+            self._view.update()
 
     def checkErrors(self):
-        if self._view._ddLanguage.value == "Language not selected":
+        if self._view._ddLanguage.value is None:
             return False
-        elif self._view._ddModality == "Modality not selected":
+        elif self._view._ddModality.value is None:
             return False
         elif self._view._txtIn.value == "":
             return False
