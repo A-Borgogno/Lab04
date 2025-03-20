@@ -35,7 +35,7 @@ class View(object):
         )
 
         # Add your stuff here
-        self._ddLanguage = ft.Dropdown(label="Select a language", width=self.page.width-400,
+        self._ddLanguage = ft.Dropdown(label="Select a language", width=self.page.width-500,
                          options=[ft.dropdown.Option("Italian"),
                                   ft.dropdown.Option("English"),
                                   ft.dropdown.Option("Spanish")], on_change=self.__controller.handleLanguageChange)

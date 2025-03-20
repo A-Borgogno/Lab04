@@ -63,11 +63,17 @@ class SpellChecker:
             self._view._lv.controls.clear()
             self._view.update()
             errate = self.handleSentence(self._view._txtIn.value, self._view._ddLanguage.value, self._view._ddModality.value)
-            row = ft.Row(controls=[ft.Text(f"Frase da ricercare: ", size=18), ft.Text(self._view._txtIn.value, italic=True, size=18)])
-            self._view._lv.controls.append(row)
-            self._view._lv.controls.append(ft.Text(f"Parole errate: {errate[0]}", size=18))
-            self._view._lv.controls.append(ft.Text(f"Tempo di esecuzione: {errate[1]}", size=18))
+            row1 = ft.Row(controls=[ft.Text(f"Frase da ricercare: ", size=18, weight=ft.FontWeight.BOLD),
+                                    ft.Text(self._view._txtIn.value, italic=True, size=18)], wrap=True)
+            self._view._lv.controls.append(row1)
+            row2 = ft.Row(controls=[ft.Text(f"Parole errate: ", size=18, weight=ft.FontWeight.BOLD),
+                                    ft.Text(f"{errate[0]}", italic=True, size=18)], wrap=True)
+            self._view._lv.controls.append(row2)
+            row3 = ft.Row(controls=[ft.Text(f"Tempo di esecuzione: ", size=18, weight=ft.FontWeight.BOLD),
+                                    ft.Text(f"{errate[1]} secondi", size=18)])
+            self._view._lv.controls.append(row3)
             self._view.update()
+
 
     def checkErrors(self):
         if self._view._ddLanguage.value is None:
